@@ -23,7 +23,7 @@ public class UserService {
 
     public User findById(UUID id){
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found!"));
     }
 
     public User insert(User obj){
@@ -32,7 +32,7 @@ public class UserService {
 
     public void delete(UUID id){
         if(!userRepository.existsById(id)){
-            throw new ResourceNotFoundException(id);
+            throw new ResourceNotFoundException("User not found!");
         }
         userRepository.deleteById(id);
     }
