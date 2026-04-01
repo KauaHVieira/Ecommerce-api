@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/Categorys")
+@RequestMapping("/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;

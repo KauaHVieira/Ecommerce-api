@@ -1,5 +1,6 @@
 package com.kauahv.Mini_ECommerceAPI.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -29,6 +30,7 @@ public class Category {
     private Category categoryParent;
 
     @OneToMany(mappedBy = "category")
+    @JsonManagedReference
     private List<Product> products = new ArrayList<>();
 
 }

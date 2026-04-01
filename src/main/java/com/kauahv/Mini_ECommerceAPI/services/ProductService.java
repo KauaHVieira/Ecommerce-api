@@ -1,7 +1,9 @@
 package com.kauahv.Mini_ECommerceAPI.services;
 
+import com.kauahv.Mini_ECommerceAPI.domain.Category;
 import com.kauahv.Mini_ECommerceAPI.domain.Product;
 import com.kauahv.Mini_ECommerceAPI.exception.ResourceNotFoundException;
+import com.kauahv.Mini_ECommerceAPI.repositories.CategoryRepository;
 import com.kauahv.Mini_ECommerceAPI.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,11 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository){
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository){
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<Product> findAll(){
@@ -29,6 +33,9 @@ public class ProductService {
     }
 
     public Product insert(Product obj){
+        Category category = categoryRepository.findById(obj.getCategory().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+        obj.setCategory(category);
         return productRepository.save(obj);
     }
 

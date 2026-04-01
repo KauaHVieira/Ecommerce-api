@@ -1,6 +1,7 @@
 package com.kauahv.Mini_ECommerceAPI.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -28,6 +29,7 @@ public class Product {
     private BigDecimal price;
     private Integer stock;
     @ManyToOne
+    @JsonBackReference
     private Category category;
     private String imageURL;
 
