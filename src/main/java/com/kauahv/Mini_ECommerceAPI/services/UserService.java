@@ -3,6 +3,7 @@ package com.kauahv.Mini_ECommerceAPI.services;
 import com.kauahv.Mini_ECommerceAPI.domain.User;
 import com.kauahv.Mini_ECommerceAPI.exception.ResourceNotFoundException;
 import com.kauahv.Mini_ECommerceAPI.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,13 +45,13 @@ public class UserService {
     }
 
     public void updateData(User user, User obj){
-        if(user.getName() != null){
+        if(obj.getName() != null){
             user.setName(obj.getName());
         }
-        if(user.getEmail() != null){
-            user.setEmail(obj.getEmail());
+        if(obj.getEmail() != null){
+            obj.setEmail(obj.getEmail());
         }
-        if(user.getPhone() != null){
+        if(obj.getPhone() != null){
             user.setPhone(obj.getPhone());
         }
     }

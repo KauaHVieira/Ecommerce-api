@@ -8,13 +8,13 @@ import lombok.Setter;
 import java.time.Instant;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 public class StandardError {
 
     private Instant timestamp;
     private Integer status;
+    private String path;
     private String error;
     private String message;
 
