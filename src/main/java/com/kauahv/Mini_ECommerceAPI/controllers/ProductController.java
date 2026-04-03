@@ -4,7 +4,9 @@ import com.kauahv.Mini_ECommerceAPI.domain.Product;
 import com.kauahv.Mini_ECommerceAPI.dto.ProductRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.ProductResponseDTO;
 import com.kauahv.Mini_ECommerceAPI.services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Validated
 @RequestMapping("/products")
 public class ProductController {
 
@@ -33,7 +36,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> insert(@RequestBody ProductRequestDTO obj){
+    public ResponseEntity<ProductResponseDTO> insert(@RequestBody @Valid ProductRequestDTO obj){
         ProductResponseDTO created = productService.insert(obj);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -44,7 +47,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> update(@PathVariable UUID id, @RequestBody ProductRequestDTO obj){
+    public ResponseEntity<ProductResponseDTO> update(@PathVariable UUID id, @RequestBody @Valid ProductRequestDTO obj){
         return ResponseEntity.ok(productService.update(id, obj));
     }
 
