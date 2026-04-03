@@ -2,7 +2,10 @@ package com.kauahv.Mini_ECommerceAPI.services;
 
 import com.kauahv.Mini_ECommerceAPI.domain.Category;
 import com.kauahv.Mini_ECommerceAPI.domain.Product;
+import com.kauahv.Mini_ECommerceAPI.dto.ProductRequestDTO;
+import com.kauahv.Mini_ECommerceAPI.dto.ProductResponseDTO;
 import com.kauahv.Mini_ECommerceAPI.exception.ResourceNotFoundException;
+import com.kauahv.Mini_ECommerceAPI.mapper.ProductMapper;
 import com.kauahv.Mini_ECommerceAPI.repositories.CategoryRepository;
 import com.kauahv.Mini_ECommerceAPI.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -17,26 +20,35 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository){
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.productMapper = productMapper;
     }
 
-    public List<Product> findAll(){
-        return productRepository.findAll();
+    public List<ProductResponseDTO> findAll(){
+        List<Product> products = productRepository.findAll();
+        return productMapper.toDtoList(products);
     }
 
-    public Product findById(UUID id){
-        return productRepository.findById(id)
+    public ProductResponseDTO findById(UUID id){
+        Product obj = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
+        return productMapper.toDto(obj);
     }
 
-    public Product insert(Product obj){
-        Category category = categoryRepository.findById(obj.getCategory().getId())
+    public ProductResponseDTO insert(ProductRequestDTO obj){
+        Category category = categoryRepository.findById(obj.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
-        obj.setCategory(category);
-        return productRepository.save(obj);
+        Product product = productMapper.toEntity(obj);
+        product.setCategory(category);
+        product.setStock(0);
+
+        product = productRepository.save(product);
+
+        return productMapper.toDto(product);
     }
 
     public void delete(UUID id){
@@ -46,27 +58,31 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Product update(UUID id, Product obj){
-        Product Product = findById(id);
-        updateData(Product, obj);
-        return productRepository.save(Product);
+    public ProductResponseDTO update(UUID id, ProductRequestDTO obj){
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Id not found!"));
+        updateData(product, obj);
+        product = productRepository.save(product);
+        return productMapper.toDto(product);
     }
 
-    public void updateData(Product Product, Product obj){
+    public void updateData(Product product, ProductRequestDTO obj){
         if(obj.getName() != null){
-            Product.setName(obj.getName());
+            product.setName(obj.getName());
         }
         if(obj.getDescription() != null){
-            Product.setDescription(obj.getDescription());
+            product.setDescription(obj.getDescription());
         }
         if(obj.getPrice() != null){
-            Product.setPrice(obj.getPrice());
+            product.setPrice(obj.getPrice());
         }
-        if(obj.getCategory() != null){
-            Product.setCategory(obj.getCategory());
+        if(obj.getCategoryId() != null && (product.getCategory() == null || !product.getCategory().getId().equals(obj.getCategoryId()))){
+            Category category = categoryRepository.findById(obj.getCategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+            product.setCategory(category);
         }
         if(obj.getImageURL() != null){
-            Product.setImageURL(obj.getImageURL());
+            product.setImageURL(obj.getImageURL());
         }
     }
 

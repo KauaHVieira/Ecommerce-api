@@ -1,6 +1,8 @@
 package com.kauahv.Mini_ECommerceAPI.controllers;
 
 import com.kauahv.Mini_ECommerceAPI.domain.Product;
+import com.kauahv.Mini_ECommerceAPI.dto.ProductRequestDTO;
+import com.kauahv.Mini_ECommerceAPI.dto.ProductResponseDTO;
 import com.kauahv.Mini_ECommerceAPI.services.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,28 +23,28 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> findAllProducts(){
+    public ResponseEntity<List<ProductResponseDTO>> findAllProducts(){
         return ResponseEntity.ok(productService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> findById(@PathVariable UUID id){
+    public ResponseEntity<ProductResponseDTO> findById(@PathVariable UUID id){
         return ResponseEntity.ok(productService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Product> insert(@RequestBody Product obj){
-        Product created = productService.insert(obj);
+    public ResponseEntity<ProductResponseDTO> insert(@RequestBody ProductRequestDTO obj){
+        ProductResponseDTO created = productService.insert(obj);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
-        return ResponseEntity.created(uri).body(obj);
+        return ResponseEntity.created(uri).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable UUID id, @RequestBody Product obj){
+    public ResponseEntity<ProductResponseDTO> update(@PathVariable UUID id, @RequestBody ProductRequestDTO obj){
         return ResponseEntity.ok(productService.update(id, obj));
     }
 
