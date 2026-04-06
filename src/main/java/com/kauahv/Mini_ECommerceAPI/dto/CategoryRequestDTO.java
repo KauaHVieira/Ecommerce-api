@@ -22,5 +22,4 @@ public class CategoryRequestDTO {
     private String description;
     private UUID categoryParentId;
 
-
 }

@@ -36,10 +36,15 @@ public class CategoryService {
     }
 
     public CategoryResponseDTO insert(CategoryRequestDTO obj){
-        Category cat = categoryRepository.findById(obj.getCategoryParentId())
-                .orElseThrow(() -> new ResourceNotFoundException("CategoryParentId not found!"));
         Category category = categoryMapper.toEntity(obj);
-        category.setCategoryParent(cat);
+        if(obj.getCategoryParentId() != null){
+            Category parent = categoryRepository.findById(obj.getCategoryParentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Parent category not found!"));
+            category.setCategoryParent(parent);
+        }
+        else{
+            category.setCategoryParent(null);
+        };
         category = categoryRepository.save(category);
 
         return categoryMapper.toDto(category);
