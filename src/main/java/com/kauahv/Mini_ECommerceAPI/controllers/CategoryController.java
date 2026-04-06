@@ -1,6 +1,7 @@
 package com.kauahv.Mini_ECommerceAPI.controllers;
 
 import com.kauahv.Mini_ECommerceAPI.domain.Category;
+import com.kauahv.Mini_ECommerceAPI.dto.CategoryResponseDTO;
 import com.kauahv.Mini_ECommerceAPI.services.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> findAllCategorys(){
+    public ResponseEntity<List<CategoryResponseDTO>> findAllCategories(){
         return ResponseEntity.ok(categoryService.findAll());
     }
 

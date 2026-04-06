@@ -1,7 +1,10 @@
 package com.kauahv.Mini_ECommerceAPI.services;
 
 import com.kauahv.Mini_ECommerceAPI.domain.Category;
+import com.kauahv.Mini_ECommerceAPI.dto.CategoryRequestDTO;
+import com.kauahv.Mini_ECommerceAPI.dto.CategoryResponseDTO;
 import com.kauahv.Mini_ECommerceAPI.exception.ResourceNotFoundException;
+import com.kauahv.Mini_ECommerceAPI.mapper.CategoryMapper;
 import com.kauahv.Mini_ECommerceAPI.repositories.CategoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +17,16 @@ import java.util.UUID;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryService(CategoryRepository categoryRepository){
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper){
         this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
     }
 
-    public List<Category> findAll(){
-        return categoryRepository.findAll();
+    public List<CategoryResponseDTO> findAll(){
+        List<Category> categories = categoryRepository.findAll();
+        return categoryMapper.toDtoList(categories);
     }
 
     public Category findById(UUID id){
