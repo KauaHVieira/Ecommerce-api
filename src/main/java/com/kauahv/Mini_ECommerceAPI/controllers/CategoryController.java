@@ -1,6 +1,7 @@
 package com.kauahv.Mini_ECommerceAPI.controllers;
 
 import com.kauahv.Mini_ECommerceAPI.domain.Category;
+import com.kauahv.Mini_ECommerceAPI.dto.CategoryRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.CategoryResponseDTO;
 import com.kauahv.Mini_ECommerceAPI.services.CategoryService;
 import org.springframework.http.ResponseEntity;
@@ -27,23 +28,23 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> findById(@PathVariable UUID id){
+    public ResponseEntity<CategoryResponseDTO> findById(@PathVariable UUID id){
         return ResponseEntity.ok(categoryService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Category> insert(@RequestBody Category obj){
-        Category created = categoryService.insert(obj);
+    public ResponseEntity<CategoryResponseDTO> insert(@RequestBody CategoryRequestDTO obj){
+        CategoryResponseDTO created = categoryService.insert(obj);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
-        return ResponseEntity.created(uri).body(obj);
+        return ResponseEntity.created(uri).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable UUID id, @RequestBody Category obj){
+    public ResponseEntity<CategoryResponseDTO> update(@PathVariable UUID id, @RequestBody CategoryRequestDTO obj){
         return ResponseEntity.ok(categoryService.update(id, obj));
     }
 

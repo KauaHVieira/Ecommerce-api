@@ -29,13 +29,20 @@ public class CategoryService {
         return categoryMapper.toDtoList(categories);
     }
 
-    public Category findById(UUID id){
-        return categoryRepository.findById(id)
+    public CategoryResponseDTO findById(UUID id){
+        Category obj = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+        return categoryMapper.toDto(obj);
     }
 
-    public Category insert(Category obj){
-        return categoryRepository.save(obj);
+    public CategoryResponseDTO insert(CategoryRequestDTO obj){
+        Category cat = categoryRepository.findById(obj.getCategoryParentId())
+                .orElseThrow(() -> new ResourceNotFoundException("CategoryParentId not found!"));
+        Category category = categoryMapper.toEntity(obj);
+        category.setCategoryParent(cat);
+        category = categoryRepository.save(category);
+
+        return categoryMapper.toDto(category);
     }
 
     public void delete(UUID id){
@@ -45,18 +52,25 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    public Category update(UUID id, Category obj){
-        Category Category = findById(id);
-        updateData(Category, obj);
-        return categoryRepository.save(Category);
+    public CategoryResponseDTO update(UUID id, CategoryRequestDTO obj){
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+        updateData(category, obj);
+        category = categoryRepository.save(category);
+        return categoryMapper.toDto(category);
     }
 
-    public void updateData(Category Category, Category obj){
+    public void updateData(Category category, CategoryRequestDTO obj){
         if(obj.getName() != null){
-            Category.setName(obj.getName());
+            category.setName(obj.getName());
         }
         if(obj.getDescription() != null){
-            Category.setDescription(obj.getDescription());
+            category.setDescription(obj.getDescription());
+        }
+        if(obj.getCategoryParentId() != null){
+            Category cat = categoryRepository.findById(obj.getCategoryParentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+            category.setCategoryParent(cat);
         }
     }
 }
