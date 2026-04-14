@@ -31,6 +31,12 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
     //private Payment payment;
-    //private Set<OrderItem> items = new HashSet<>();
+    private Set<OrderItem> items = new HashSet<>();
+
+    public BigDecimal getTotalPrice(){
+        return items.stream()
+                .map(OrderItem::getSubTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
 }
