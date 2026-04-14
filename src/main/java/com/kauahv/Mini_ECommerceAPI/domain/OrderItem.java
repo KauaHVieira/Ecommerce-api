@@ -4,11 +4,13 @@ import com.kauahv.Mini_ECommerceAPI.domain.pk.OrderItemPK;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
+@Table(name = "order_items")
 public class OrderItem {
 
     @EmbeddedId

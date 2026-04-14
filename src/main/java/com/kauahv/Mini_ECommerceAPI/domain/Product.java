@@ -7,6 +7,8 @@ import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -32,5 +34,8 @@ public class Product {
     @JsonBackReference
     private Category category;
     private String imageURL;
+
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> items = new HashSet<>();
 
 }
