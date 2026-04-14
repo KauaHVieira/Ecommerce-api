@@ -1,5 +1,6 @@
 package com.kauahv.Mini_ECommerceAPI.domain;
 
+import com.kauahv.Mini_ECommerceAPI.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -27,7 +28,8 @@ public class Order {
     private Instant moment;
     @ManyToOne
     private User client;
-    private Integer orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
     //private Payment payment;
     //private Set<OrderItem> items = new HashSet<>();
 
