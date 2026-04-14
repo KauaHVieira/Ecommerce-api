@@ -26,12 +26,17 @@ public class Order {
     @EqualsAndHashCode.Include
     private UUID id;
     private Instant moment;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    //private Payment payment;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
+
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
 
