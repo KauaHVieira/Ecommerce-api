@@ -1,5 +1,6 @@
 package com.kauahv.Mini_ECommerceAPI.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kauahv.Mini_ECommerceAPI.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,6 +26,8 @@ public class Order {
     @UuidGenerator
     @EqualsAndHashCode.Include
     private UUID id;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
 
     @ManyToOne

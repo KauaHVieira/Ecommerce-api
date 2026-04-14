@@ -24,7 +24,7 @@ public class Category {
     @EqualsAndHashCode.Include
     private UUID id;
     private String name;
-    private String description; 
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "category_parent_id")
