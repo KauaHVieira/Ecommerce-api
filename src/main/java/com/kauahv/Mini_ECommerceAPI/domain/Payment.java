@@ -3,13 +3,23 @@ package com.kauahv.Mini_ECommerceAPI.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kauahv.Mini_ECommerceAPI.enums.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.service.annotation.GetExchange;
 
 import java.time.Instant;
 import java.util.UUID;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "payment")
-public class Payment {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Payment {
 
     @Id
     private UUID id;
@@ -23,4 +33,7 @@ public class Payment {
     @OneToOne
     @MapsId
     private Order order;
+
+    public abstract String getType();
+
 }
