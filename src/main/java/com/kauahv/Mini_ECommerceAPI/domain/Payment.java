@@ -2,6 +2,7 @@ package com.kauahv.Mini_ECommerceAPI.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kauahv.Mini_ECommerceAPI.enums.PaymentStatus;
+import com.kauahv.Mini_ECommerceAPI.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,6 @@ public abstract class Payment {
     @MapsId
     private Order order;
 
-    public abstract String getType();
+    public abstract PaymentType getType();
 
 }

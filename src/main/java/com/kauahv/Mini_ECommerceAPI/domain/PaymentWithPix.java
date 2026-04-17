@@ -1,5 +1,6 @@
 package com.kauahv.Mini_ECommerceAPI.domain;
 
+import com.kauahv.Mini_ECommerceAPI.enums.PaymentType;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class PaymentWithPix extends Payment{
     private String pixKey;
 
     @Override
-    public String getType() {
-        return "PIX";
+    public PaymentType getType() {
+        return PaymentType.PIX;
     }
 }
