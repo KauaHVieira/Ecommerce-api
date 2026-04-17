@@ -28,7 +28,9 @@ public class OrderMapper {
         dto.setId(obj.getId());
         dto.setClientName(obj.getClient().getName());
         dto.setStatus(obj.getOrderStatus());
-        dto.setPayment(paymentMapper.toDto(obj.getPayment()));
+        if (obj.getPayment() != null){
+            dto.setPayment(paymentMapper.toDto(obj.getPayment()));
+        }
         dto.setTotalPrice(obj.getTotalPrice());
         dto.setCreatedAt(obj.getMoment());
         dto.setItems(orderItemMapper.toDtoList(obj.getItems()));
