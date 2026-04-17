@@ -20,7 +20,7 @@ public class OrderResponseDTO {
     private UUID id;
     private String clientName;
     private OrderStatus status;
-    private Payment paymentType;
+    private PaymentResponseDTO payment;
     private BigDecimal totalPrice;
     private Instant createdAt;
     private List<OrderItemResponseDTO> items;
