@@ -6,6 +6,7 @@ import com.kauahv.Mini_ECommerceAPI.domain.Product;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderItemRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderResponseDTO;
+import com.kauahv.Mini_ECommerceAPI.enums.OrderStatus;
 import com.kauahv.Mini_ECommerceAPI.exception.ResourceNotFoundException;
 import com.kauahv.Mini_ECommerceAPI.mapper.OrderMapper;
 import com.kauahv.Mini_ECommerceAPI.repositories.OrderRepository;
@@ -74,16 +75,28 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-    public Order update(UUID id, Order obj){
-        Order Order = orderRepository.findById(id)
+    public OrderResponseDTO updateOrderItems(UUID id, OrderRequestDTO dto){
+        Order order = orderRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
-        updateData(Order, obj);
-        return orderRepository.save(Order);
+
+        if(order.getOrderStatus() != OrderStatus.WAITING_PAYMENT){
+            throw new IllegalStateException("Cannot modify order after payment!");
+        }
+
+        if(dto.getItems() == null || dto.getItems().isEmpty()){
+            throw new IllegalArgumentException("Order must have at least one item!");
+        }
+
+        order.getItems().clear();
+
+        Set<OrderItem> items = dto.getItems().stream()
+                .map(itemDTO -> createOrderItem(itemDTO, order))
+                .collect(Collectors.toSet());
+
+        order.getItems().addAll(items);
+        Order savedOrder = orderRepository.save(order);
+
+        return orderMapper.toDto(savedOrder);
     }
 
-    public void updateData(Order Order, Order obj){
-        if(obj.getOrderStatus() != null){
-            Order.setOrderStatus(obj.getOrderStatus());
-        }
-    }
 }

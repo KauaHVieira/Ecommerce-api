@@ -40,7 +40,7 @@ public class Order {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
 
-    @OneToMany(mappedBy = "id.order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id.order", fetch = FetchType.LAZY,  orphanRemoval = true)
     private Set<OrderItem> items = new HashSet<>();
 
     public BigDecimal getTotalPrice(){
