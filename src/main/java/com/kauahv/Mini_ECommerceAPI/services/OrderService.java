@@ -45,8 +45,8 @@ public class OrderService {
     }
 
     public OrderResponseDTO insert(OrderRequestDTO obj){
-
         Order order = orderMapper.toEntity(obj);
+        order.setOrderStatus(OrderStatus.WAITING_PAYMENT);
         Set<OrderItem> items = obj.getItems().stream()
                 .map(itemDTO -> createOrderItem(itemDTO, order))
                 .collect(Collectors.toSet());

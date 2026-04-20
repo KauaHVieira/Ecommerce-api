@@ -43,9 +43,9 @@ public class OrderController {
         return ResponseEntity.created(uri).body(created);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Order> update(@PathVariable UUID id, @RequestBody Order obj){
-        return ResponseEntity.ok(orderService.update(id, obj));
+    @PutMapping("/{id}/items")
+    public ResponseEntity<OrderResponseDTO> updateOrderItems(@PathVariable UUID id, @RequestBody OrderRequestDTO dto){
+        return ResponseEntity.ok(orderService.updateOrderItems(id, dto));
     }
 
     @DeleteMapping("/{id}")
