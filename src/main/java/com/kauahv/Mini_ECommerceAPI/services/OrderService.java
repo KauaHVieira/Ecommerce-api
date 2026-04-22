@@ -62,6 +62,9 @@ public class OrderService {
         OrderItem item = new OrderItem();
         item.setOrder(order);
         item.setProduct(product);
+        if (dto.getQuantity() == null || dto.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero");
+        }
         item.setQuantity(dto.getQuantity());
         item.setPrice(product.getPrice());
 
@@ -115,6 +118,28 @@ public class OrderService {
         }
 
         orderRepository.save(order);
+    }
+
+    public OrderResponseDTO addOrderItem(UUID orderId, OrderItemRequestDTO dto){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
+        if(order.getOrderStatus() != OrderStatus.WAITING_PAYMENT){
+            throw new IllegalStateException("Cannot modify order after payment!");
+        }
+
+        OrderItem orderItem = order.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(dto.getProductId()))
+                .findFirst()
+                .orElse(null);
+        if(orderItem != null){
+            orderItem.setQuantity(orderItem.getQuantity() + dto.getQuantity());
+        }
+        else{
+            order.getItems().add(createOrderItem(dto, order));
+        }
+
+        Order savedOrder = orderRepository.save(order);
+        return orderMapper.toDto(savedOrder);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.kauahv.Mini_ECommerceAPI.controllers;
 
-import com.kauahv.Mini_ECommerceAPI.domain.Order;
+import com.kauahv.Mini_ECommerceAPI.dto.OrderItemRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderResponseDTO;
 import com.kauahv.Mini_ECommerceAPI.services.OrderService;
@@ -58,6 +58,12 @@ public class OrderController {
     public ResponseEntity<Void> removeItem(@PathVariable UUID orderId, @PathVariable UUID productId){
         orderService.removeOrderItem(orderId, productId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{orderId}/items")
+    public ResponseEntity<OrderResponseDTO> addItem(@PathVariable UUID orderId, @RequestBody OrderItemRequestDTO dto){
+        OrderResponseDTO response = orderService.addOrderItem(orderId, dto);
+        return ResponseEntity.ok(response);
     }
 
 }
