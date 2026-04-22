@@ -60,7 +60,7 @@ public class ProductService {
 
     public ProductResponseDTO update(UUID id, ProductRequestDTO obj){
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Id not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
         updateData(product, obj);
         product = productRepository.save(product);
         return productMapper.toDto(product);

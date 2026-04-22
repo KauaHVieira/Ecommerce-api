@@ -142,4 +142,23 @@ public class OrderService {
         return orderMapper.toDto(savedOrder);
     }
 
+    public OrderResponseDTO updateQuantity(UUID orderId, UUID productId, Integer quantity){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
+        if(order.getOrderStatus() != OrderStatus.WAITING_PAYMENT){
+            throw new IllegalStateException("Cannot modify order after payment!");
+        }
+        if(quantity == null || quantity <= 0){
+            throw new IllegalArgumentException("The quantity must be greater than 0!");
+        }
+        OrderItem orderItem = order.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Item not found!"));
+
+        orderItem.setQuantity(quantity);
+        Order savedOrder = orderRepository.save(order);
+        return orderMapper.toDto(savedOrder);
+    }
+
 }

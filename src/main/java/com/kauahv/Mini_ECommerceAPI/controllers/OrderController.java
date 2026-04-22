@@ -3,7 +3,9 @@ package com.kauahv.Mini_ECommerceAPI.controllers;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderItemRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderResponseDTO;
+import com.kauahv.Mini_ECommerceAPI.dto.UpdateOrderItemQuantityDTO;
 import com.kauahv.Mini_ECommerceAPI.services.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -63,6 +65,12 @@ public class OrderController {
     @PostMapping("/{orderId}/items")
     public ResponseEntity<OrderResponseDTO> addItem(@PathVariable UUID orderId, @RequestBody OrderItemRequestDTO dto){
         OrderResponseDTO response = orderService.addOrderItem(orderId, dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{orderId}/items/{productId}")
+    public ResponseEntity<OrderResponseDTO> updateItemQuantity(@PathVariable UUID orderId, @PathVariable UUID productId, @RequestBody @Valid UpdateOrderItemQuantityDTO dto){
+        OrderResponseDTO response = orderService.updateQuantity(orderId, productId, dto.getQuantity());
         return ResponseEntity.ok(response);
     }
 
