@@ -54,4 +54,10 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{orderId}/items/{productId}")
+    public ResponseEntity<Void> removeItem(@PathVariable UUID orderId, @PathVariable UUID productId){
+        orderService.removeOrderItem(orderId, productId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
