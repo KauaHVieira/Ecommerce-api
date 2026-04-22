@@ -99,4 +99,22 @@ public class OrderService {
         return orderMapper.toDto(savedOrder);
     }
 
+    public void removeOrderItem(UUID orderId, UUID productId){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
+        if(order.getOrderStatus() != OrderStatus.WAITING_PAYMENT){
+            throw new IllegalStateException("Cannot modify order after payment!");
+        }
+        if (order.getItems().isEmpty()) {
+            throw new IllegalStateException("Order must have at least one item");
+        }
+        boolean removed = order.getItems()
+                .removeIf(orderItem -> orderItem.getProduct().getId().equals(productId));
+        if(!removed){
+            throw new ResourceNotFoundException("OrderItem not found!");
+        }
+
+        orderRepository.save(order);
+    }
+
 }
