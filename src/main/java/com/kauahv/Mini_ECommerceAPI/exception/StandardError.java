@@ -1,15 +1,14 @@
 package com.kauahv.Mini_ECommerceAPI.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 public class StandardError {
 
     private Instant timestamp;
