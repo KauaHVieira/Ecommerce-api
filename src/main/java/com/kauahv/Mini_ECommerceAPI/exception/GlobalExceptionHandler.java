@@ -61,4 +61,17 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(err);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<StandardError> genericExceptionHandler(Exception e, HttpServletRequest request){
+        StandardError err = StandardError.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .path(request.getRequestURI())
+                .error("Internal server Error!")
+                .message("Unexpected error occurred!")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
+    }
 }
