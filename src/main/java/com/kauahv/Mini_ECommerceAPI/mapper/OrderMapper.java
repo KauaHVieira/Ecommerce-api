@@ -18,11 +18,6 @@ public class OrderMapper {
         this.orderItemMapper = orderItemMapper;
     }
 
-    public Order toEntity(OrderRequestDTO dto){
-        Order obj = new Order();
-        return obj;
-    }
-
     public OrderResponseDTO toDto(Order obj){
         OrderResponseDTO dto = new OrderResponseDTO();
         dto.setId(obj.getId());

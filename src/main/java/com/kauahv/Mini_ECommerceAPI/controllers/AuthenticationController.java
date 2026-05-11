@@ -2,7 +2,9 @@ package com.kauahv.Mini_ECommerceAPI.controllers;
 
 import com.kauahv.Mini_ECommerceAPI.domain.User;
 import com.kauahv.Mini_ECommerceAPI.dto.AuthenticationDTO;
+import com.kauahv.Mini_ECommerceAPI.dto.LoginResponseDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.RegisterDTO;
+import com.kauahv.Mini_ECommerceAPI.infra.security.TokenService;
 import com.kauahv.Mini_ECommerceAPI.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +23,20 @@ public class AuthenticationController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User)auth.getPrincipal());
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")

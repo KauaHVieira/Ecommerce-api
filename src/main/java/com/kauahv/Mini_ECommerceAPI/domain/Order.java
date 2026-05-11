@@ -31,7 +31,7 @@ public class Order {
     private Instant moment;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_id", nullable = false)
     private User client;
 
     @Enumerated(EnumType.STRING)
@@ -40,7 +40,7 @@ public class Order {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
 
-    @OneToMany(mappedBy = "id.order", fetch = FetchType.LAZY,  orphanRemoval = true)
+    @OneToMany(mappedBy = "id.order", cascade = CascadeType.ALL, fetch = FetchType.LAZY,  orphanRemoval = true)
     private Set<OrderItem> items = new HashSet<>();
 
     public BigDecimal getTotalPrice(){

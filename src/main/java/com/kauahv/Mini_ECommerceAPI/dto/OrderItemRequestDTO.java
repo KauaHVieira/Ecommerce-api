@@ -1,5 +1,7 @@
 package com.kauahv.Mini_ECommerceAPI.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +15,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrderItemRequestDTO {
 
+    @NotNull
     private  UUID productId;
+    @NotNull
     private Integer quantity;
 
 }

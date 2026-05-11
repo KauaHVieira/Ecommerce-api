@@ -54,6 +54,13 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- TOKEN GENERATOR -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>4.5.2</version>
+		</dependency>
+
 		<!-- DATABASE -->
 		<dependency>
 			<groupId>org.postgresql</groupId>

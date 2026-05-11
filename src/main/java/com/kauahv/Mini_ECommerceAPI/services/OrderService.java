@@ -3,6 +3,7 @@ package com.kauahv.Mini_ECommerceAPI.services;
 import com.kauahv.Mini_ECommerceAPI.domain.Order;
 import com.kauahv.Mini_ECommerceAPI.domain.OrderItem;
 import com.kauahv.Mini_ECommerceAPI.domain.Product;
+import com.kauahv.Mini_ECommerceAPI.domain.User;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderItemRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderResponseDTO;
@@ -11,8 +12,10 @@ import com.kauahv.Mini_ECommerceAPI.exception.ResourceNotFoundException;
 import com.kauahv.Mini_ECommerceAPI.mapper.OrderMapper;
 import com.kauahv.Mini_ECommerceAPI.repositories.OrderRepository;
 import com.kauahv.Mini_ECommerceAPI.repositories.ProductRepository;
+import com.kauahv.Mini_ECommerceAPI.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -25,12 +28,14 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final OrderMapper orderMapper;
     private final PaymentService paymentService;
+    private final UserRepository userRepository;
 
-    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, OrderMapper orderMapper, PaymentService paymentService){
+    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, OrderMapper orderMapper, PaymentService paymentService, UserRepository userRepository){
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.orderMapper = orderMapper;
         this.paymentService = paymentService;
+        this.userRepository = userRepository;
     }
 
     public List<OrderResponseDTO> findAll(){
@@ -44,8 +49,24 @@ public class OrderService {
         return orderMapper.toDto(obj);
     }
 
-    public OrderResponseDTO insert(OrderRequestDTO obj){
-        Order order = orderMapper.toEntity(obj);
+    public List<OrderResponseDTO> findMyOrders(User user){
+        return orderRepository.findByClientId(user.getId())
+                .stream().map(orderMapper::toDto)
+                .toList();
+    }
+
+    public OrderResponseDTO findMyOrder(UUID id, User user){
+        Order order = orderRepository
+                .findByIdAndClientId(id, user.getId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Order not found!"));
+        return orderMapper.toDto(order);
+    }
+
+    public OrderResponseDTO insert(User user, OrderRequestDTO obj){
+        Order order = new Order();
+        order.setClient(user);
+        order.setMoment(Instant.now());
         order.setOrderStatus(OrderStatus.WAITING_PAYMENT);
         Set<OrderItem> items = obj.getItems().stream()
                 .map(itemDTO -> createOrderItem(itemDTO, order))

@@ -1,5 +1,6 @@
 package com.kauahv.Mini_ECommerceAPI.controllers;
 
+import com.kauahv.Mini_ECommerceAPI.domain.User;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderItemRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderRequestDTO;
 import com.kauahv.Mini_ECommerceAPI.dto.OrderResponseDTO;
@@ -7,6 +8,7 @@ import com.kauahv.Mini_ECommerceAPI.dto.UpdateOrderItemQuantityDTO;
 import com.kauahv.Mini_ECommerceAPI.services.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -34,9 +36,19 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findById(id));
     }
 
+    @GetMapping("/my-orders")
+    public ResponseEntity<List<OrderResponseDTO>> findMyOrders(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(orderService.findMyOrders(user));
+    }
+
+    @GetMapping("/my-orders/{id}")
+    public ResponseEntity<OrderResponseDTO> findMyOrder(@AuthenticationPrincipal User user, @PathVariable UUID id) {
+        return ResponseEntity.ok(orderService.findMyOrder(id,user));
+    }
+
     @PostMapping
-    public ResponseEntity<OrderResponseDTO> insert(@RequestBody OrderRequestDTO obj){
-        OrderResponseDTO created = orderService.insert(obj);
+    public ResponseEntity<OrderResponseDTO> insert(@AuthenticationPrincipal User user, @RequestBody @Valid OrderRequestDTO obj){
+        OrderResponseDTO created = orderService.insert(user, obj);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
