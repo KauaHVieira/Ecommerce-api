@@ -1,6 +1,5 @@
 package com.kauahv.Mini_ECommerceAPI.infra.security;
 
-import com.kauahv.Mini_ECommerceAPI.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
